@@ -1,0 +1,149 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import Typography from '@material-ui/core/Typography';
+import { blue } from '@material-ui/core/colors';
+import DialogContent from '@material-ui/core/DialogContent';
+import { Grid } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { Icon } from '@material-ui/core';
+
+const emails = ['username@gmail.com', 'user02@gmail.com'];
+const useStyles = makeStyles({
+  avatar: {
+    backgroundColor: blue[100],
+    color: blue[600]
+  },
+});
+
+function SimpleDialog(props) {
+  const classes = useStyles();
+  const { onClose, selectedValue, open } = props;
+  const [name, setName] = React.useState("");
+  const [description,setDescription]=React.useState("");
+  const [code,setCode]=React.useState("");
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+  React.useEffect(()=>{console.log(props,"props");
+  setName(props.selectedValue[0].name);},[]);
+  const handleChange=(event)=>{
+      var targetName= event.target.name;
+   
+
+      if(targetName=="name"){
+       setName(event.target.value);
+      }
+      else if(targetName=="description"){
+          setDescription(event.target.value);
+      }
+      else {
+          setCode(event.target.value);
+       
+      }
+   }
+   const addData=()=>{
+  
+    $cjs.cjsRESTAPICall({
+            type: "POST",
+            url: "/horus/public/XecUEIxxye9t8qFLqE7en2/addCampaign",
+            data: {"campaignTypeCode":code,"campaignType":name,"CampaignTypeDescription":description},
+            done: function(resp) {
+                console.log(resp,"success")
+            },
+            fail : function(jqXHR, textStatus, errorThrown) {
+                console.log("failed")            }
+        });
+   }
+
+  const handleListItemClick = value => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} >
+      <DialogTitle id="simple-dialog-title">Define Campaign Type</DialogTitle>
+      <DialogContent style={{ width: "33vw", height: "40vh" }} >
+        <Grid container style={{alignContent:"space-around",height:"100%"}}>
+            <Grid item xs={12} >
+            <TextField id="standard-basic" label="Code" fullWidth={true} name="code" value={code} onChange={handleChange}/>
+
+          </Grid>
+          <Grid item xs={12} >
+            <TextField id="standard-basic" label="Name" fullWidth={true} name="name" value={name} onChange={handleChange}/>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField id="standard-basic" label="Description" fullWidth={true} name="description" value={description}  onChange={handleChange}/>
+          </Grid>
+
+          <Grid container spacing={1} style={{justifyContent:"flex-end"}}>
+
+            <Grid item xs={3}>
+              <Button onClick={handleClose} variant="contained">Cancel</Button>
+            </Grid>
+            <Grid item xs={3}>
+              <Button onClick={addData} variant="contained">Add</Button>
+            </Grid>
+          </Grid>
+
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+} 
+
+SimpleDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  selectedValue: PropTypes.string.isRequired,
+};
+
+export default function SimpleDialogDemo(props) {
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState('');
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+ 
+
+  const handleClose = value => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+  
+
+  return (
+    <div style={{display:"flex"}}>
+          <br />
+      <Button  onClick={handleClickOpen} style={{display:(props.rowValue.length==0)?"":"none"}} >
+      <Icon style={{ color: "rgb(128, 195, 65)" }}>add</Icon>
+        Add
+      </Button>{
+          (props.rowValue.length && open)? <SimpleDialog selectedValue={props.rowValue} open={open} onClose={handleClose} />:""
+      }     
+      <Button  onClick={handleClickOpen} style={{display:(props.rowValue.length>0)?"":"none"}} disabled={(props.rowValue.length==1)? false:true}>
+      <Icon style={{ color: "rgb(128, 195, 65)" }}>edit</Icon>
+        Edit
+      </Button>
+      {(props.rowValue.length && openForEdit)?<SimpleDialog selectedValue={props.rowValue} open={open} onClose={handleClose} />:""}      
+      <Button style={{display:(props.rowValue.length>0)?"":"none"}}>
+      <Icon style={{ color: "rgb(128, 195, 65)" }}>delete</Icon>
+        Delete
+      </Button>
+
+    </div>
+  );
+}
+
+
