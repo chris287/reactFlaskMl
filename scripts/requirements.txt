@@ -11,7 +11,7 @@ decorator==4.4.1
 distlib==0.3.0
 filelock==3.0.12
 Flask==1.1.1
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 flask-restplus==0.12.1
 future==0.18.2
 idna==2.8
