@@ -41,4 +41,4 @@ tornado==6.0.3
 urllib3==1.26.5
 virtualenv==20.0.4
 virtualenv-clone==0.5.3
-Werkzeug==0.16.1
+Werkzeug==2.2.3
